@@ -1,4 +1,4 @@
-const CACHE_NAME = 'khedmatyar-mazar-v9-final';
+const CACHE_NAME = 'khedmatyar-mazar-v10-graphic';
 const CORE = ['./', './index.html', './manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(CORE.map(url => new Request(url, {cache:'reload'}))).catch(() => {})));
