@@ -1,0 +1,12 @@
+{
+  "name": "خدمت‌یار مزارشریف",
+  "short_name": "خدمت‌یار",
+  "lang": "fa-AF",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f5",
+  "theme_color": "#0f7a4f",
+  "description": "خدمات محلی و دفتر حساب‌وکتاب دکان"
+}
