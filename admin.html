@@ -1,10 +1,10 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>مدیریت خدمت‌یار</title>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="Cache-Control" content="no-store"><title>مدیریت خدمت‌یار</title>
 <style>*{box-sizing:border-box}body{margin:0;background:#eef3f9;color:#132f4b;font:16px/1.8 Tahoma,sans-serif}.box,.card{background:#fff;border-radius:18px;padding:18px;margin:14px auto;max-width:860px;box-shadow:0 10px 26px #07274c14}#login{max-width:380px;margin-top:12vh}
 input,select,textarea{width:100%;padding:12px;margin:5px 0;border:1px solid #cfdbe7;border-radius:12px;font:inherit}button{border:0;border-radius:12px;padding:10px 16px;font:700 15px Tahoma;cursor:pointer;background:#07529a;color:#fff;margin:3px}
 button.g{background:#f2b935;color:#15324d}button.r{background:#c0392b}button.o{background:#e8eef5;color:#132f4b}
 header{background:linear-gradient(135deg,#062c50,#0a4170);color:#ffd978;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}nav{display:flex;gap:6px;flex-wrap:wrap;max-width:860px;margin:12px auto;padding:0 10px}nav button.on{background:#f2b935;color:#15324d}
 .row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:1px solid #e3ebf3;padding:10px 0}.st{font-size:12px;padding:2px 10px;border-radius:99px;background:#fff3c4}.st.approved{background:#d1fae5}.st.rejected,.st.hidden{background:#fee2e2}small{color:#60758b}pre{direction:ltr;text-align:left;white-space:pre-wrap;background:#eef5fc;padding:10px;border-radius:10px;user-select:all;font-size:13px}#lm{line-height:1.9;color:#a33}img.pv{max-width:100%;max-height:160px;border-radius:12px;margin:6px 0}</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800&display=swap"><style>body,input,select,textarea,button{font-family:Vazirmatn,Tahoma,sans-serif!important}</style></head><body>
-<div id="login" class="box"><h2>🔒 ورود مدیر</h2><input id="em" type="email" placeholder="ایمیل" autocomplete="username"><input id="pw" type="password" placeholder="رمز" autocomplete="current-password"><button id="in">ورود</button><p id="lm"></p></div>
+<div id="login" class="box"><h2>🔒 ورود مدیر</h2><input id="em" type="email" placeholder="ایمیل" autocomplete="username"><input id="pw" type="password" placeholder="رمز" autocomplete="current-password"><button id="in">ورود</button> <button class="o" id="dg" type="button">🩺 بررسی اتصال</button><p id="lm"></p><div id="dgo"></div><small>نسخهٔ ۱۴</small></div>
 <div id="app" hidden><header><b>پنل مدیریت خدمت‌یار</b><button class="o" id="out">خروج</button></header>
 <nav><button data-t="p" class="on">همکاران</button><button data-t="a">تبلیغات</button><button data-t="m">بازار</button><button data-t="s">تنظیمات</button></nav>
 <div id="tp"></div><div id="tm" hidden></div>
@@ -19,12 +19,14 @@ async function up(f,dir){const b=await shrink(f),n=dir+'/'+Date.now()+'-'+Math.r
 function out(){T='';sessionStorage.removeItem('t');$('app').hidden=true;$('login').hidden=false}
 $('out').onclick=out;
 let UID='',UEM='';
+$('dg').onclick=async()=>{const o=[];$('dgo').textContent='...';for(const t of ['providers','ads','listings','settings','admins']){try{const x=await fetch(SB+'/rest/v1/'+t+'?select=*&limit=1',{headers:{apikey:K}}),j=await x.json().catch(()=>({}));o.push(j.code==='PGRST205'?'❌ '+t+' — ساخته نشده':(j.code==='42501'&&t!=='admins')?'⚠️ '+t+' — ساخته شده ولی دسترسی ندارد':'✅ '+t)}catch(e2){o.push('❌ '+t+' — اتصال برقرار نشد')}}
+$('dgo').innerHTML='<pre>پروژه: '+e(SB.split('//')[1].split('.')[0])+'\n'+o.join('\n')+'</pre>'+(o.some(l=>l[0]!=='✅')?'<p>اگر ❌ یا ⚠️ می‌بینی، فایل supabase-setup.sql را کامل در SQL Editor اجرا کن.</p>':'<p>همهٔ جدول‌ها هستند ✓ — ایمیل و رمز را بزن.</p>')};
 $('in').onclick=async()=>{const m=$('lm');m.textContent='در حال ورود...';try{
 const r=await fetch(SB+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:K,'Content-Type':'application/json'},body:JSON.stringify({email:$('em').value.trim(),password:$('pw').value})});
 const j=await r.json().catch(()=>({}));
 if(!j.access_token)throw Error('ورود ناموفق: '+(j.msg||j.error_description||j.message||r.status)+(j.error_code?' ('+j.error_code+')':'')+' — ایمیل و رمز را با کاربری که در Authentication ← Users ساخته‌ای مقایسه کن.');
 T=j.access_token;UID=(j.user||{}).id;UEM=(j.user||{}).email;let a;
-try{a=await api('admins?select=user_id')}catch(x){out();throw Error('خطای دسترسی به پایگاه داده: '+String(x.message).slice(0,160)+' — فایل supabase-fix.sql را در SQL Editor اجرا کن.')}
+try{a=await api('admins?select=user_id')}catch(x){out();throw Error(String(x.message).includes('PGRST205')?'جدول‌ها هنوز در Supabase ساخته نشده‌اند. فایل supabase-setup.sql را کامل در SQL Editor اجرا کن (Run) و اگر خطا داد، متن خطا را بفرست.':'خطای دسترسی به پایگاه داده: '+String(x.message).slice(0,160)+' — فایل supabase-setup.sql را دوباره اجرا کن.')}
 if(!a.length){out();m.innerHTML='ورود درست بود، ولی این ایمیل (<b dir="ltr">'+e(UEM)+'</b>) هنوز مدیر ثبت نشده. این خط را در SQL Editor اجرا کن و دوباره وارد شو:<pre>insert into admins(user_id) values (\''+e(UID)+'\') on conflict do nothing;</pre>';return}
 sessionStorage.setItem('t',T);m.textContent='';start()}catch(x){m.textContent=x.message}};
 $('pw').addEventListener('keydown',ev=>{if(ev.key==='Enter')$('in').click()});
