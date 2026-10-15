@@ -54,10 +54,3 @@ create policy "admin manages media" on storage.objects for all using (bucket_id=
 
 -- بعد از ساختن کاربر مدیر در Authentication ← Users، این خط را (دوباره) اجرا کن:
 insert into admins(user_id) select id from auth.users where email='taher.watan.dost@gmail.com' on conflict do nothing;
-
-window.KHEDMATYAR_CONFIG = {
-  url: 'https://rkkjbkmnhzccucqbrqqt.supabase.co',
-  anonKey: 'sb_publishable_Ty6EvQ6_VTkxHE8alPnH3A_bEeUyJq-',
-  adminEmail: 'ایمیل-واقعی-مدیر-را-اینجا-بنویس'
-};
-
