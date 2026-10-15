@@ -54,3 +54,5 @@ create policy "admin manages media" on storage.objects for all using (bucket_id=
 
 -- بعد از ساختن کاربر مدیر در Authentication ← Users، این خط را (دوباره) اجرا کن:
 insert into admins(user_id) select id from auth.users where email='taher.watan.dost@gmail.com' on conflict do nothing;
+
+notify pgrst, 'reload schema';
