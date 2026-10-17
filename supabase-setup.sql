@@ -71,6 +71,21 @@ grant select on public.ads, public.settings to anon;
 grant all on public.providers, public.ads, public.listings, public.settings, public.admins to authenticated;
 grant execute on function public.is_admin() to anon, authenticated;
 
+create table if not exists public.messages(
+ id bigint generated always as identity primary key,
+ kind text not null default 'contact' check (kind in ('contact','report')),
+ name text check (char_length(name)<=80), contact text check (char_length(contact)<=60),
+ body text not null check (char_length(body) between 3 and 1000), ref text,
+ status text not null default 'new' check (status in ('new','read')),
+ created_at timestamptz not null default now());
+alter table public.messages enable row level security;
+drop policy if exists "anyone sends message" on public.messages;
+create policy "anyone sends message" on public.messages for insert with check (status='new');
+drop policy if exists "admin all messages" on public.messages;
+create policy "admin all messages" on public.messages for all using (public.is_admin()) with check (public.is_admin());
+grant insert on public.messages to anon;
+grant all on public.messages to authenticated;
+
 -- بخش عکس‌ها: اگر خطا بدهد فقط همین بخش رد می‌شود و جدول‌ها سالم می‌مانند.
 do $st$ begin
   insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
