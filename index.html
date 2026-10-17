@@ -249,9 +249,9 @@ input:focus,select:focus,textarea:focus{outline:0!important;border-color:#f2b935
 .ky-note{font-size:13px!important;line-height:1.9}#ky-ledger #ky-stats{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}#ky-ledger #ky-stats .ky-card{padding:12px!important}
 @media(prefers-reduced-motion:no-preference){@keyframes kyup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}.card,.kv-c,.kv-panel,.mk-card{animation:kyup .45s both}}
 </style>
-</head>
+<link rel="icon" type="image/png" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>img.site-logo{border:0!important;border-radius:15px!important;background:none!important;padding:0!important;box-shadow:0 6px 16px #0006}</style></head>
 <body>
-<header><div class="header-brand"><div class="site-logo" id="siteLogo">🕌</div><div class="header-copy"><h1 id="siteTitle">خدمت‌یار مزارشریف</h1><p id="siteSubtitle">راه ساده‌تر برای پیدا کردن خدمات محلی</p></div></div><span class="header-pill">خدمات شهری، نزدیک‌تر به شما</span></header>
+<header><div class="header-brand"><img class="site-logo" id="siteLogo" src="logo.png" alt="خدمت‌یار" width="54" height="54"><div class="header-copy"><h1 id="siteTitle">خدمت‌یار مزارشریف</h1><p id="siteSubtitle">راه ساده‌تر برای پیدا کردن خدمات محلی</p></div></div><span class="header-pill">خدمات شهری، نزدیک‌تر به شما</span></header>
 <nav>
 <button data-t="find" class="on">جست‌وجو</button>
 <button data-t="reg">ثبت‌نام همکار</button>
@@ -398,7 +398,7 @@ input:focus,select:focus,textarea:focus{outline:0!important;border-color:#f2b935
 </section>
 <section id="mkt" class="hide"><div class="card"><h3>🛒 بازار خرید و فروش</h3><div class="mu">موتر، موبایل، خانه، وسایل کهنه و هر چیز دیگر. برای خرید، مستقیم با فروشنده تماس بگیرید.</div><div class="row"><div><label>نوع</label><select id="mkKind"></select></div><div><label>جست‌وجو</label><input id="mkQ" placeholder="مثلاً کرولا، آیفون، آپارتمان"></div></div><div class="acts"><button class="btn" id="mkNew" type="button">＋ ثبت آگهی فروش</button></div></div>
 <div class="card hide" id="mkForm"><h3>ثبت آگهی فروش</h3><label>نوع</label><select id="mkType"></select><label>عنوان *</label><input id="mkTitle" placeholder="مثلاً تویوتا کرولا ۲۰۱۲"><label>قیمت (افغانی)</label><input id="mkPrice" inputmode="numeric"><div id="mkFields"></div><label>توضیحات</label><textarea id="mkDesc" rows="3"></textarea><label>شمارهٔ تماس / واتساپ *</label><input id="mkPhone" type="tel" inputmode="tel" placeholder="07XXXXXXXX"><label>عکس‌ها (تا ۶ عکس، از گالری یا دوربین)</label><input id="mkFiles" type="file" accept="image/*" multiple><div id="mkPrev" class="mk-prev"></div><input id="mkHp" class="hide" tabindex="-1" autocomplete="off"><div class="acts"><button class="btn" id="mkSend" type="button">ارسال برای بررسی</button></div><div id="mkMsg"></div></div><div id="mkList"></div></section>
-<footer class="kyv-foot">🔒 حریم خصوصی: دفتر حساب‌وکتاب فقط روی همین دستگاه ذخیره می‌شود. اطلاعات ثبت‌نام همکار و آگهی بازار (از جمله شمارهٔ تماس) بعد از تأیید مدیر برای همه نمایش داده می‌شود؛ شمارهٔ شخصی ثبت نکنید مگر بخواهید عمومی باشد. خدمت‌یار کیفیت کار و درستی آگهی‌ها را تضمین نمی‌کند؛ پیش از خرید یا پرداخت، حضوری بررسی کنید.</footer></main>
+<footer class="kyv-foot">🔒 حریم خصوصی: دفتر حساب‌وکتاب فقط روی همین دستگاه ذخیره می‌شود. اطلاعات ثبت‌نام همکار و آگهی بازار (از جمله شمارهٔ تماس) بعد از تأیید مدیر برای همه نمایش داده می‌شود؛ شمارهٔ شخصی ثبت نکنید مگر بخواهید عمومی باشد. خدمت‌یار کیفیت کار و درستی آگهی‌ها را تضمین نمی‌کند؛ پیش از خرید یا پرداخت، حضوری بررسی کنید.<br><small>نسخهٔ ۱۸</small></footer></main>
 <!--
 # PLEASE DO NOT REMOVE OR CHANGE THIS COPYRIGHT BLOCK
 #====================================================================
@@ -830,6 +830,11 @@ fetch(SB+"/rest/v1/ads?select=id&limit=1",{headers:{apikey:K}}).then(function(r)
 var DN=["شنبه","یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه"],CM={USD:["دلار","🇺🇸",1],EUR:["یورو","🇪🇺",1],GBP:["پوند","🇬🇧",1],PKR:["۱۰۰ روپیه پاکستان","🇵🇰",100],INR:["۱۰۰ روپیه هند","🇮🇳",100],SAR:["ریال سعودی","🇸🇦",1],AED:["درهم","🇦🇪",1],TRY:["لیر ترکیه","🇹🇷",1],CNY:["یوان","🇨🇳",1],IRR:["۱۰۰۰ تومان ایران","🇮🇷",1e4]},
 HID={mkt:'nav button[data-t="mkt"],#bnav [data-t="mkt"]',qur:'nav button[data-t="qur"]',cal:'nav button[data-t="cal"],#bnav [data-t="cal"]',pro:'nav button[data-t="pro"],#bnav [data-t="pro"]',reg:'nav button[data-t="reg"],#bnav [data-t="reg"]',ads:'#business-ads',feat:'.kv-feat',ledger:'#ky-ledger-launch,#bnav [data-l]',contact:'#kvContact'};
 function apply(site,cats){site=site||{};var hd=site.hide||[],css=hd.map(function(k){return HID[k]?HID[k]+'{display:none!important}':''}).join("");if(css)document.head.insertAdjacentHTML("beforeend","<style>"+css+"</style>");
+var br=site.brand||{},ti=$("siteTitle");
+if(br.name&&ti){ti.textContent=br.name;document.title=br.name;if(br.tag&&$("siteSubtitle"))$("siteSubtitle").textContent=br.tag}else if(br.tag&&$("siteSubtitle"))$("siteSubtitle").textContent=br.tag;
+if(br.title&&$("kyvTitle"))$("kyvTitle").textContent=br.title;if(br.text&&$("kyvText"))$("kyvText").textContent=br.text;
+var bb=document.querySelector(".kv-brand");if(bb&&(br.b1||br.b2))bb.innerHTML=esc(br.b1||"")+" <em>"+esc(br.b2||"")+"</em>";
+if(br.logo){document.querySelectorAll("img.site-logo").forEach(function(i){i.src=br.logo});document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(function(l){l.href=br.logo;l.removeAttribute("type")})}
 var info=$("kvInfo");if(!info){var n=document.querySelector("nav");n.insertAdjacentHTML("afterend",'<div id="kvInfo"></div>');info=$("kvInfo")}
 var h="",nt=site.notice;if(nt&&nt.on&&nt.text)h+='<div class="kv-notice n-'+(nt.tone||"info")+'">'+esc(nt.text)+'</div>';
 var dk=site.dhikr,i=(new Date().getDay()+1)%7,bar="";if(dk&&dk.on&&dk.days&&dk.days[i])bar+='<span class="kv-pill">☪️ ذکر امروز ('+DN[i]+'): <b>'+esc(dk.days[i])+'</b></span>';
