@@ -1,4 +1,4 @@
-const CACHE_NAME = 'khedmatyar-mazar-v22-portal';
+const CACHE_NAME = 'khedmatyar-mazar-v23-stats';
 const CORE = ['./', './index.html', './manifest.webmanifest', './config.js', './icon-192.png', './icon-512.png', './logo.png'];
 self.addEventListener('install', event => {
   /* هر فایل جدا کش می‌شود تا نبودِ یک فایل کل کش را خراب نکند */
