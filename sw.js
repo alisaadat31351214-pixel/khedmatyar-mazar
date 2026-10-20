@@ -1,5 +1,5 @@
-const CACHE_NAME = 'khedmatyar-mazar-v23-stats';
-const CORE = ['./', './index.html', './manifest.webmanifest', './config.js', './icon-192.png', './icon-512.png', './logo.png'];
+const CACHE_NAME = 'khedmatyar-mazar-v27-quran';
+const CORE = ['./', './index.html', './manifest.webmanifest', './config.js', './app.js', './app.css', './quran-style.js', './icon-192.png', './icon-512.png', './logo.png'];
 self.addEventListener('install', event => {
   /* هر فایل جدا کش می‌شود تا نبودِ یک فایل کل کش را خراب نکند */
   event.waitUntil(caches.open(CACHE_NAME).then(cache => Promise.allSettled(CORE.map(url => cache.add(new Request(url, {cache:'reload'}))))));
