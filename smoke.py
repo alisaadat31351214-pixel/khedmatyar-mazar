@@ -8,6 +8,7 @@ PORT = 8799; BASE = f'http://localhost:{PORT}/'
 SITE = {"key": "site", "value": {"dhikr": {"on": True, "days": ["ذکر"] * 7}, "ordersOff": False, "contact": {"on": True, "wa": "93700123456"}}}
 PROV = [{"id": 7, "name": "دکان نمونه", "cats": ["قصابی و خوراکه", "تعمیر وسایل برقی"], "skills": {}, "areas": [], "all_areas": True, "address": "بلخ", "phone": "0700111222", "status": "approved", "extra": {"products": [{"name": "روغن", "price": "۱۸۰", "unit": "لیتر"}]}}]
 ORD = [{"id": 3, "code": "AB12CD34", "provider_id": 7, "category": "تعمیر موتر", "details": "تست", "customer_name": "علی", "customer_phone": "0700", "status": "pending", "commission_status": "none", "created_at": "2026-10-17T10:00:00Z", "provider_done": False, "customer_confirmed": False}]
+PR0 = {"id": 1, "provider_id": 7, "deal": "gerawi", "ptype": "haveli", "title": "حویلی نمونه", "area": "ناحیه 3", "price": 900000, "currency": "AFN", "term_months": 12, "facilities": [], "images": [], "agent_name": "راهنما", "agent_phone": "0700111222", "status": "active", "featured": False}
 calls = []
 async def route(r, settings=SITE):
     u = r.request.url; m = r.request.method
@@ -19,6 +20,9 @@ async def route(r, settings=SITE):
     if '/rpc/prov_open' in u: return await J({"orders": [{"id": 11, "code": "OP", "category": "x", "details": "d"}]})
     if '/rpc/prov_action' in u: calls.append('prov_action'); return await J({"ok": True})
     if '/rpc/create_shop_order' in u: calls.append('shop'); return await J('SH12AB34')
+    if '/rpc/agent_props' in u: return await J({"props": [PR0]})
+    if '/rpc/agent_save_prop' in u: calls.append('agent_save'); return await J({"id": 5})
+    if '/rest/v1/properties' in u and m == 'GET': return await J([PR0, dict(PR0, id=2, deal='rent', title='آپارتمان', ptype='apartment', price=15000)])
     if '/rpc/admin_list_admins' in u: return await J([{"user_id": "1", "email": "a@b.c"}])
     if '/auth/v1/token' in u: return await J({"access_token": "a.b.c", "user": {"id": "1", "email": "a@b.c"}})
     if '/rest/v1/admins' in u: return await J([{"user_id": "1"}])
@@ -54,12 +58,18 @@ async def main():
             await pg.click('nav button[data-t="pp"]'); await pg.fill('#ppPhone', '0700111222'); await pg.fill('#ppCode', 'ABCD1234'); await pg.click('#ppGo'); await pg.wait_for_timeout(500)
             ok('provider portal: open orders listed', await pg.locator('[data-claim]').count() == 1)
             await pg.click('[data-claim]'); await pg.wait_for_timeout(200); ok('provider claim sent', 'prov_action' in calls)
+            await pg.click('nav button[data-t="re"]'); await pg.wait_for_timeout(400); ok('real estate: listings shown', await pg.locator('.re-card').count() == 2)
+            await pg.select_option('#reDeal', 'gerawi'); await pg.wait_for_timeout(200); ok('real estate: deal filter works', await pg.locator('.re-card').count() == 1)
+            await pg.click('nav button[data-t="pp"]'); await pg.wait_for_timeout(200); await pg.click('#agNew') if await pg.locator('#agNew').count() else None
+            ok('agent panel lists own properties', await pg.locator('#agBox .ppc').count() == 1)
+            await pg.click('#agNew'); await pg.fill('#agTitle', 'حویلی'); await pg.fill('#agPrice', '1000'); await pg.click('#agSave'); await pg.wait_for_timeout(300); ok('agent saves a property', 'agent_save' in calls)
             await pg.click('[data-lite]'); ok('lite mode toggles', await pg.evaluate("document.documentElement.classList.contains('lite')"))
             ad = await b.new_page(viewport={'width': 430, 'height': 900}); ad.on('pageerror', lambda e: errs.append('adm ' + str(e)[:120])); ad.on('dialog', lambda d: asyncio.ensure_future(d.accept()))
             await ad.route('**/*', lambda r: route(r)); await ad.goto(BASE + 'admin.html'); await ad.fill('#em', 'a@b.c'); await ad.fill('#pw', 'x'); await ad.click('#in'); await ad.wait_for_timeout(900)
             ok('admin: dashboard stats', await ad.locator('.st').count() >= 3)
             await ad.click('.nb[data-t="x"]'); await ad.wait_for_timeout(200); ok('admin: security tab lists admins', 'a@b.c' in await ad.inner_text('#view'))
             await ad.click('.nb[data-t="r"]'); await ad.click('[data-act=csug]'); await ad.wait_for_timeout(200); ok('admin: Afghan categories suggested', await ad.locator('.card h2').count() > 8)
+            await ad.click('.nb[data-t="e"]'); await ad.wait_for_timeout(200); ok('admin: properties tab', await ad.locator('.it').count() == 2)
             await ad.click('.nb[data-t="o"]'); await ad.wait_for_timeout(200); ok('admin: orders list + CSV button', await ad.locator('[data-act=ocsv]').count() == 1)
             off = await b.new_page(); off.on('pageerror', lambda e: errs.append('off ' + str(e)[:120]))
             await off.route('**/*', lambda r: route(r, {"key": "site", "value": {"ordersOff": True, "ordersOffMsg": "بسته"}})); await off.goto(BASE + 'index.html'); await off.wait_for_timeout(1000)

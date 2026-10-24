@@ -1,4 +1,4 @@
-const CACHE_NAME = 'khedmatyar-mazar-v27-quran';
+const CACHE_NAME = 'khedmatyar-mazar-v28-realestate';
 const CORE = ['./', './index.html', './manifest.webmanifest', './config.js', './app.js', './app.css', './quran-style.js', './icon-192.png', './icon-512.png', './logo.png'];
 self.addEventListener('install', event => {
   /* هر فایل جدا کش می‌شود تا نبودِ یک فایل کل کش را خراب نکند */
